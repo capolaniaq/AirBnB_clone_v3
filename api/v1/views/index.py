@@ -19,15 +19,14 @@ def status():
     return jsonify({"status": "OK"})
 
 
-@app_views.route('/stats', strict_slashes=False)
-def count_method():
-    """method that return the count
-    from each clasess"""
+@app_views.route('/stats', methods=['GET'], strict_slashes=False)
+def number_objects():
+    """ Retrieves the number of each objects by type """
+    classes = [Amenity, City, Place, Review, State, User]
+    names = ["amenities", "cities", "places", "reviews", "states", "users"]
 
-    classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City, "Place\
-        ": Place, "Review": Review, "State": State, "User": User}
+    num_objs = {}
+    for i in range(len(classes)):
+        num_objs[names[i]] = storage.count(classes[i])
 
-    count_clases = {}
-    for key, value in classes.items():
-        count_clases[key] = storage.count(value)
-    return jsonify(count_clases)
+    return jsonify(num_objs)
